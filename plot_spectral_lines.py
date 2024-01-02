@@ -61,7 +61,7 @@ def plot_continuum(fig, cont, rms_region, distance):
     standardStuff(gc, 1, distance, 'w')
     return ra, dec, gc, cont_header, rms_val
 
-def plot_mom_map(fig, cont_fig, mom_map, rms_val, distance, cmap_val, v_sys=None):
+def plot_mom_map(fig, mom_map, distance, cmap_val, v_sys=None):
 
     hdul = fits.open(mom_map)
     mom_img = hdul[0]
@@ -80,8 +80,8 @@ def plot_mom_map(fig, cont_fig, mom_map, rms_val, distance, cmap_val, v_sys=None
     st.markdown(maxval)
     gc.show_colorscale(vmin=minval, vmax=maxval, cmap = cmap_val, stretch ='linear')
     gc.add_colorbar()
-    contours=drawContours(5, 405, rms_val)
-    gc.show_contour(cont_fig, levels=contours, colors='k', linewidths=1.0)
+    #contours=drawContours(5, 405, rms_val)
+    #gc.show_contour(cont_fig, levels=contours, colors='k', linewidths=1.0)
     standardStuff(gc, 1, distance, 'k')
     return ra, dec, gc, mom_header
 
@@ -134,7 +134,7 @@ def main():
 
     source_path = path + '%s/' %src_name
     
-    cont_image = source_path + '%s_SBLB_continuum_robust_2.0.pbcor.tt0.fits' %(src_name)
+    #cont_image = source_path + '%s_SBLB_continuum_robust_2.0.pbcor.tt0.fits' %(src_name)
     #sky_region = Regions.read(source_path + '%s_rms.crtf' %(src_name), format='crtf')[0]
     
     mom8_imgs = glob.glob(source_path+'*robust_2.0_mom8_15arcsec.fits')
@@ -156,9 +156,9 @@ def main():
     col1, col2 = st.columns([0.3, 0.7])
     zoom=col1.slider('Select Zoom Level (RA/Dec square size in arcsecs):', 2, 15, 15, 1)
     fig2 = plt.figure(figsize=(7,7))
-    ra, dec, gc2, mom8_hdr = plot_mom_map(fig2, cont_image, mom8_img, cont_rms, dist, cmap_val='Spectral_r')
+    ra, dec, gc2, mom8_hdr = plot_mom_map(fig2, mom8_img, dist, cmap_val='Spectral_r')
     fig3 = plt.figure(figsize=(7,7))
-    ra2, dec2, gc3, mom9_hdr = plot_mom_map(fig3, cont_image, mom9_img, cont_rms, dist, cmap_val='RdBu_r', v_sys=vsys)
+    ra2, dec2, gc3, mom9_hdr = plot_mom_map(fig3, mom9_img, dist, cmap_val='RdBu_r', v_sys=vsys)
 
     col2,col3 = st.columns(2)
 
