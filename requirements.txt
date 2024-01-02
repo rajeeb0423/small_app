@@ -1,6 +1,6 @@
 pandas
 numpy
-streamlit=1.29.0
+streamlit==1.29.0
 st_pages
 plotly
 streamlit_extras
