@@ -4,3 +4,6 @@ streamlit==1.29.0
 st_pages
 plotly
 streamlit_extras
+st_pages
+astropy==5.3.*
+aplpy==2.1.0

@@ -1,8 +1,8 @@
 import streamlit as st
-#from st_pages import Page, show_pages
+from st_pages import Page, show_pages
 import pandas as pd
 import numpy as np
-#from streamlit_extras.switch_page_button import switch_page
+from streamlit_extras.switch_page_button import switch_page
 import plotly.express as px
 
 def display_footer():
@@ -19,8 +19,8 @@ def displaypage():
 
     st.set_page_config(page_title= 'eDisk Overview', page_icon='eDisk_logo_ver.4.jpg', initial_sidebar_state="collapsed", layout='wide')
 
-    #show_pages([Page("eDisk_main.py","Main"),
-    #            Page("plot_spectral_lines.py","Plot")])
+    show_pages([Page("eDisk_main.py","Main"),
+                Page("plot_spectral_lines.py","Plot")])
 
     st.markdown(
         """
@@ -92,8 +92,8 @@ def displaypage():
 
     display_footer()
 
-    #if btnSubmit:
-    #    switch_page('Plot')
+    if btnSubmit:
+        switch_page('Plot')
 
 if __name__ == '__main__':
     displaypage()
