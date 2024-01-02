@@ -55,13 +55,13 @@ def plot_continuum(fig, cont, rms_region, distance):
     rms_val = np.sqrt(np.nanmean((region_for_rms.data)**2))
 
     minval, maxval = min_max_vals(cont_img)
-    gc1 = aplpy.FITSFigure(cont_img, figure=fig)
-    gc1.show_colorscale(vmin= minval, vmax=maxval, cmap='inferno', stretch='arcsinh')
-    gc1.add_colorbar()
-    standardStuff(gc1, 1, distance, 'w')
-    return ra, dec, gc1, cont_header, rms_val
+    gc = aplpy.FITSFigure(cont_img, figure=fig)
+    gc.show_colorscale(vmin= minval, vmax=maxval, cmap='inferno', stretch='arcsinh')
+    gc.add_colorbar()
+    standardStuff(gc, 1, distance, 'w')
+    return ra, dec, gc, cont_header, rms_val
 
-def plot_mom_map(fig, mom_map, distance, cmap_val, v_sys=None):
+def plot_mom_map(fig, cont_fig, mom_map, rms_val, distance, cmap_val, v_sys=None):
 
     hdul = fits.open(mom_map)
     mom_img = hdul[0]
@@ -72,16 +72,18 @@ def plot_mom_map(fig, mom_map, distance, cmap_val, v_sys=None):
 
     if v_sys == None:
         minval, maxval = np.nanpercentile(mom_img.data, (0.25, 99.75))
-    else: 
+    else:
         minval, maxval = v_sys-3, v_sys+3
 
-    gc1 = aplpy.FITSFigure(mom_map, figure=fig)
-    gc1.show_colorscale(vmin=minval, vmax=maxval, cmap = cmap_val, stretch ='linear')
-    gc1.add_colorbar()
-    #contours=drawContours(5, 405, rms_val)
-    #gc1.show_contour(cont_fig, levels=contours, colors='k', linewidths=1.0)
-    standardStuff(gc1, 1, distance, 'k')
-    return ra, dec, gc1, mom_header
+    gc = aplpy.FITSFigure(mom_map, figure=fig)
+    st.markdown(minval)
+    st.markdown(maxval)
+    gc.show_colorscale(vmin=minval, vmax=maxval, cmap = cmap_val, stretch ='linear')
+    gc.add_colorbar()
+    contours=drawContours(5, 405, rms_val)
+    gc.show_contour(cont_fig, levels=contours, colors='k', linewidths=1.0)
+    standardStuff(gc, 1, distance, 'k')
+    return ra, dec, gc, mom_header
 
 def display_footer():
     st.divider()
@@ -122,6 +124,7 @@ def main():
     src_name = st.session_state['selected_source']['Source'].values[0]
     dist = st.session_state['selected_source']['Distance'].values[0]
     vsys = st.session_state['selected_source']['v_sys'].values[0]
+    cont_rms = st.session_state['selected_source']['cont_rms'].values[0]
 
     col1, col2 = st.columns([0.7, 0.3])
     col1.markdown("<h1 style='text-align: center;'>%s</h1>" %(src_name), unsafe_allow_html=True)
@@ -131,7 +134,7 @@ def main():
 
     source_path = path + '%s/' %src_name
     
-    #cont_image = source_path + '%s_SBLB_continuum_robust_2.0.pbcor.tt0.fits' %(src_name)
+    cont_image = source_path + '%s_SBLB_continuum_robust_2.0.pbcor.tt0.fits' %(src_name)
     #sky_region = Regions.read(source_path + '%s_rms.crtf' %(src_name), format='crtf')[0]
     
     mom8_imgs = glob.glob(source_path+'*robust_2.0_mom8_15arcsec.fits')
@@ -153,9 +156,9 @@ def main():
     col1, col2 = st.columns([0.3, 0.7])
     zoom=col1.slider('Select Zoom Level (RA/Dec square size in arcsecs):', 2, 15, 15, 1)
     fig2 = plt.figure(figsize=(7,7))
-    ra, dec, gc2, mom8_hdr = plot_mom_map(fig2, mom8_img, dist, cmap_val='Spectral_r')
+    ra, dec, gc2, mom8_hdr = plot_mom_map(fig2, cont_image, mom8_img, cont_rms, dist, cmap_val='Spectral_r')
     fig3 = plt.figure(figsize=(7,7))
-    ra2, dec2, gc3, mom9_hdr = plot_mom_map(fig3, mom9_img, dist, cmap_val='RdBu_r', v_sys=vsys)
+    ra2, dec2, gc3, mom9_hdr = plot_mom_map(fig3, cont_image, mom9_img, cont_rms, dist, cmap_val='RdBu_r', v_sys=vsys)
 
     col2,col3 = st.columns(2)
 

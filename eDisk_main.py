@@ -59,7 +59,7 @@ def displaypage():
                 hide_index=True, height=380,
                 column_config={'RA': 'R.A. (hh:mm:ss)', 'Dec': 'Dec. (dd:mm:ss)',                  
                                 'Distance': 'Distance (pc)', 'T_bol': 'T_bol (K)', 
-                                'L_bol': 'L_bol (L_sun)', 'v_sys': None, 'Description': None})
+                                'L_bol': 'L_bol (L_sun)', 'v_sys': None, 'cont_rms': None, 'Description': None})
     
     fig = px.scatter(eDisk_df, x='T_bol', y='L_bol', labels={
                      "T_bol": 'T<sub>bol</sub> (K)',
